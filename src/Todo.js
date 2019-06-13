@@ -11,29 +11,38 @@ import EditTodoForm from './EditTodoForm';
 import { TodosContext } from './context/todos.context';
 
 const Todo = ({ task, completed, id }) => {
-  const [isEditing, toggle] = Toggle(false)
-  const {removeTodo, toggleTodo } = useContext(TodosContext)
+  const [isEditing, toggle] = Toggle(false);
+  const { dispatch } = useContext(TodosContext);
 
   return (
-    <ListItem style={{height: '64px'}}>
-      {isEditing ? <EditTodoForm id={id} task={task} toggleEditForm={toggle}/>:
+    <ListItem style={{ height: '64px' }}>
+      {isEditing ? (
+        <EditTodoForm id={id} task={task} toggleEditForm={toggle} />
+      ) : (
         <>
-      <Checkbox tabIndex={-1} checked={completed} onClick={() => toggleTodo(id)} />
-      <ListItemText
-        style={{ textDecoration: completed ? 'line-through' : 'none' }}
-      >
-        {task}
-      </ListItemText>
-      <ListItemSecondaryAction>
-        <IconButton aria-label="Delete" onClick={() => removeTodo(id)}>
-          <DeleteIcon/>
-        </IconButton>
-        <IconButton aria-label="Edit" onClick={toggle}>
-          <EditIcon/>
-        </IconButton>
-      </ListItemSecondaryAction>
-      </>
-        }
+          <Checkbox
+            tabIndex={-1}
+            checked={completed}
+            onClick={() => dispatch({ type: 'TOGGLE', id: id })}
+          />
+          <ListItemText
+            style={{ textDecoration: completed ? 'line-through' : 'none' }}
+          >
+            {task}
+          </ListItemText>
+          <ListItemSecondaryAction>
+            <IconButton
+              aria-label="Delete"
+              onClick={() => dispatch({ type: 'REMOVE', id: id })}
+            >
+              <DeleteIcon />
+            </IconButton>
+            <IconButton aria-label="Edit" onClick={toggle}>
+              <EditIcon />
+            </IconButton>
+          </ListItemSecondaryAction>
+        </>
+      )}
     </ListItem>
   );
 };
